@@ -15,18 +15,19 @@ class Game:
 
 	def update_score(self, lines_cleared, move_down_points):
 		if lines_cleared == 1:
-			self.score += 100
+			self.score += 50
 		elif lines_cleared == 2:
-			self.score += 300
+			self.score += 100
 		elif lines_cleared == 3:
-			self.score += 500
+			self.score += 150
+		elif lines_cleared == 4:
+			self.score += 300
 		self.score += move_down_points
 
 	def get_random_block(self):
 		if len(self.blocks) == 0:
 			self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
 		block = random.choice(self.blocks)
-		self.blocks.remove(block)
 		return block
 
 	def move_left(self):
@@ -44,6 +45,16 @@ class Game:
 		if self.block_inside() == False or self.block_fits() == False:
 			self.current_block.move(-1, 0)
 			self.lock_block()
+
+	def drop(self):
+		while self.block_inside() and self.block_fits():
+			self.current_block.move(1, 0)
+		self.current_block.move(-1, 0)
+		self.lock_block()
+
+	def hold(self):
+		self.current_block, self.next_block = self.next_block, self.current_block
+		self.current_block.reset_position()
 
 	def lock_block(self):
 		tiles = self.current_block.get_cell_positions()
@@ -87,9 +98,10 @@ class Game:
 		self.grid.draw(screen)
 		self.current_block.draw(screen, 11, 11)
 
+		self.next_block.reset_position()
 		if self.next_block.id == 3:
-			self.next_block.draw(screen, 255, 290)
+			self.next_block.draw(screen, 255, 255)
 		elif self.next_block.id == 4:
-			self.next_block.draw(screen, 255, 280)
+			self.next_block.draw(screen, 285, 273)
 		else:
 			self.next_block.draw(screen, 270, 270)

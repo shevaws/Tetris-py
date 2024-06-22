@@ -12,6 +12,10 @@ class Block:
 		self.rotation_state = 0
 		self.colors = Colors.get_cell_colors()
 
+	def reset_position(self):
+		self.row_offset = 1
+		self.column_offset = 3
+
 	def move(self, rows, columns):
 		self.row_offset += rows
 		self.column_offset += columns

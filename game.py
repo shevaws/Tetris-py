@@ -12,6 +12,9 @@ class Game:
 		self.game_over = False
 		self.score = 0
 
+		if self.block_fits() == False or self.block_inside() == False:
+			self.game_over() == True
+
 
 	def update_score(self, lines_cleared, move_down_points):
 		if lines_cleared == 1:
@@ -28,6 +31,7 @@ class Game:
 		if len(self.blocks) == 0:
 			self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
 		block = random.choice(self.blocks)
+		self.blocks.remove(block)
 		return block
 
 	def move_left(self):
@@ -55,6 +59,8 @@ class Game:
 	def hold(self):
 		self.current_block, self.next_block = self.next_block, self.current_block
 		self.current_block.reset_position()
+		if self.block_fits() == False or self.block_inside() == False:
+			self.game_over() == True
 
 	def lock_block(self):
 		tiles = self.current_block.get_cell_positions()
@@ -74,6 +80,9 @@ class Game:
 		self.current_block = self.get_random_block()
 		self.next_block = self.get_random_block()
 		self.score = 0
+
+		if self.block_fits() == False or self.block_inside() == False:
+			self.game_over() == True
 
 	def block_fits(self):
 		tiles = self.current_block.get_cell_positions()
@@ -98,7 +107,8 @@ class Game:
 		self.grid.draw(screen)
 		self.current_block.draw(screen, 11, 11)
 
-		self.next_block.reset_position()
+		preview_block = self.next_block
+		preview_block.reset_position()
 		if self.next_block.id == 3:
 			self.next_block.draw(screen, 255, 255)
 		elif self.next_block.id == 4:
